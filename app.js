@@ -16,7 +16,7 @@ const db = mongoose.connection;
 db.on("error", console.error.bind(console, "MongoDB connection error:"));
 
 app.get('/', (req, res) => {
-    res.send("Hello Everyone!");
+    res.send("Hello Everyone watching this deployment video!");
 })
 
 app.get('/users', (req, res) => {

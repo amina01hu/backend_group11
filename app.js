@@ -23,6 +23,10 @@ const usersRouter = require('./routes/users');
 
 app.use('/users', usersRouter);
 
+app.get('/', (req, res) => {
+    res.send("Hello Everyone!");
+})
+
 app.listen(HTTP_PORT, () => {
     console.log("API listening on: " + HTTP_PORT)
 });

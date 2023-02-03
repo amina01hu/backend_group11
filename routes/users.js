@@ -37,7 +37,7 @@ router.route('/login').post(async (req, res) => {
     
 })
 
-router.route('/resetLoggedIn').post(async (req, res) => {
+router.route('/resetPassword').post(async (req, res) => {
     const email = req.body.email;
     const oldPassword = req.body.oldPassword;
     var newPassword = req.body.newPassword;

@@ -16,13 +16,29 @@ router.route("/").get((req, res) => {
 
 router.route('/add').post(async (req, res) => {
     const email = req.body.email;
+    const username = req.body.username;
     var password = req.body.password;
     password = await hashPassword(password);
-    const newUser = new User({'email': email, 'password' : password});
+    const newUser = new User({'username':username, 'email': email, 'password' : password});
     newUser.save()
     .then(() => res.json('User added!'))
     .catch(err => res.status(400).json('Error: ' + err));
 });
+
+router.route('/getUser').post(async (req, res) => {
+    const email = req.body.email;
+    const username = req.body.username;
+    var password = req.body.password;
+    var matchPass = await hashPassword(password);
+    User.findOne({'email' : email, 'username' : username })
+    .then((data) => {
+        if(data.password == matchPass){
+            res.json("User found!")
+        }
+    }).catch(err => res.status(400).json("Error: " + err))
+    
+})
+
 
 router.route('/login').post(async (req, res) => {
     const email = req.body.email;
@@ -31,7 +47,7 @@ router.route('/login').post(async (req, res) => {
     User.findOne({'email' : email })
     .then((data) => {
         if(data.password == matchPass){
-            res.json("User found! Login Successful")
+            res.json("Login sucessful!")
         }
     }).catch(err => res.status(400).json("Error: " + err))
     

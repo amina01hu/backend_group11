@@ -26,27 +26,24 @@ router.route('/add').post(async (req, res) => {
 });
 
 router.route('/getUser').post(async (req, res) => {
-    const email = req.body.email;
     const username = req.body.username;
-    var password = req.body.password;
-    User.findOne({'email' : email, 'username' : username })
-    .then((data) => {
-        bcrypt.compare(password, data.password).then(res => {
-            if(res == data.password){
-                res.json("Account found!")
-            }else{
-                res.json("Account not found!")
-            }
-          }).catch(err => console.error(err.message));
-    }).catch(err => res.status(400).json("Error: " + err))
-    
+    const email = req.body.email;
+    const password = req.body.password;
+    User.findOne({ email: email , username : username})
+      .then((data) => {
+        if (bcrypt.compareSync(password, data.password)) {
+          res.send("Account found!");
+        } else {
+          res.send("Account not found");
+        }
+      })
+      .catch((err) => res.json("Error: " + err));
 })
 
 
 router.route("/login").post(async (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
-  
     User.findOne({ email: email })
       .then((data) => {
         if (bcrypt.compareSync(password, data.password)) {

@@ -29,7 +29,6 @@ router.route('/getUser').post(async (req, res) => {
     const email = req.body.email;
     const username = req.body.username;
     var password = req.body.password;
-    console.log(password)
     User.findOne({'email' : email, 'username' : username })
     .then((data) => {
         bcrypt.compare(password, data.password).then(res => {
@@ -50,11 +49,13 @@ router.route('/login').post(async (req, res) => {
     var matchPass = await hashPassword(password);
     User.findOne({'email' : email })
     .then((data) => {
-        if(data.password == matchPass){
-            res.json("Login sucessful!")
-        }else{
-            res.json("Account not found");
-        }
+        bcrypt.compare(password, data.password).then(res => {
+            if(res == data.password){
+                res.json("Account found!")
+            }else{
+                res.json("Account not found!")
+            }
+          }).catch(err => console.error(err.message));
     }).catch(err => res.json("Account not found"))
     
 })

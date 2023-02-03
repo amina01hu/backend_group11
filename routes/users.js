@@ -49,7 +49,7 @@ router.route('/login').post(async (req, res) => {
         if(data.password == matchPass){
             res.json("Login sucessful!")
         }
-    }).catch(err => res.status(400).json("Error: " + err))
+    }).catch(err => res.json("Account not found"))
     
 })
 

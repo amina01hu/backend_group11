@@ -30,19 +30,22 @@ router.route("/getUser").post(async (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
   
-    User.findOne({ email: email, username: username })
+    User.findOne({ username: username, email: email })
       .then((data) => {
         if (data) {
-          if (bcrypt.compareSync(password, data.password)) {
+          const hashedPassword = data.password;
+          if (bcrypt.compareSync(password, hashedPassword)) {
             res.send("Account found!");
           } else {
             res.send("Incorrect password");
           }
         } else {
-          res.send("Account not found");
+          res.send("User not found");
         }
       })
-      .catch((err) => res.json("Error: " + err));
+      .catch((error) => {
+        res.send("Error: " + error);
+      });
   });
 
 

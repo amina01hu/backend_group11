@@ -34,6 +34,8 @@ router.route('/getUser').post(async (req, res) => {
     .then((data) => {
         if(data.password == matchPass){
             res.json("User found!")
+        }else{
+            res.json("User not found");
         }
     }).catch(err => res.status(400).json("Error: " + err))
     

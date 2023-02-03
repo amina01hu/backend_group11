@@ -5,8 +5,8 @@ const mongoose = require("mongoose");
 const app = express();
 const cors = require('cors');
 const HTTP_PORT = process.env.PORT || 8080;
-//let User = require('./modules/user-schema');
-//let Post = require('./modules/post-schema');
+let User = require('./modules/user-schema');
+let Post = require('./modules/post-schema');
 
 app.use(cors());
 app.use(express.json());

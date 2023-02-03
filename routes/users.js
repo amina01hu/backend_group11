@@ -50,6 +50,8 @@ router.route('/login').post(async (req, res) => {
     .then((data) => {
         if(data.password == matchPass){
             res.json("Login sucessful!")
+        }else{
+            res.json("Account not found");
         }
     }).catch(err => res.json("Account not found"))
     

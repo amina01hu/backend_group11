@@ -22,7 +22,7 @@ router.route('/add').post(async (req, res) => {
     password = await hashPassword(password);
     const newUser = new User({'username':username, 'email': email, 'password' : password});
     newUser.save()
-    .then(() => res.json('User added!'))
+    .then(() => res.send('User added!'))
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
@@ -36,16 +36,16 @@ router.route("/getUser").post(async (req, res) => {
         if (data) {
           const hashedPassword = data.password;
           if (bcrypt.compareSync(password, hashedPassword)) {
-            res.send("Account found!");
+            res.json("Account found!");
           } else {
-            res.send("Incorrect password");
+            res.json("Incorrect password");
           }
         } else {
-          res.send("User not found");
+          res.json("User not found");
         }
       })
       .catch((error) => {
-        res.send("Error: " + error);
+        res.json("Error: " + error);
       });
   });
 
@@ -56,9 +56,9 @@ router.route("/login").post(async (req, res) => {
     User.findOne({ email: email })
       .then((data) => {
         if (bcrypt.compareSync(password, data.password)) {
-          res.send("Account found!");
+          res.json("Account found!");
         } else {
-          res.send("Account not found");
+          res.json("Account not found");
         }
       })
       .catch((err) => res.json("Error: " + err));
@@ -78,20 +78,20 @@ router.route("/login").post(async (req, res) => {
             const hash = bcrypt.hashSync(newPassword, salt);
             User.findOneAndUpdate({email: email }, { password: hash }, { new: true })
               .then(() => {
-                res.send("Password updated successfully");
+                res.json("Password updated successfully");
               })
               .catch((error) => {
-                res.send("Error updating password: " + error);
+                res.json("Error updating password: " + error);
               });
           } else {
-            res.send("Incorrect password");
+            res.json("Incorrect password");
           }
         } else {
-          res.send("User not found");
+          res.json("User not found");
         }
       })
       .catch((error) => {
-        res.send("Error: " + error);
+        res.json("Error: " + error);
       });
   });
 

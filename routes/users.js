@@ -63,22 +63,36 @@ router.route("/login").post(async (req, res) => {
       .catch((err) => res.json("Error: " + err));
   });
 
-router.route('/resetPassword').post(async (req, res) => {
+  router.route("/resetPassword").post(async (req, res) => {
+    const username = req.body.username;
     const email = req.body.email;
-    const oldPassword = req.body.oldPassword;
-    var newPassword = req.body.newPassword;
-    var matchPass = await hashPassword(oldPassword);
-    var newPassHashed = await hashPassword(newPassword);
-    User.findOne({'email' : email })
-    .then((data) => {
-        if(data.password == matchPass){
-            User.updateOne({'email' : email }, 
-                {'password': newPassHashed})
-                .then(() => res.json("Password changed"))
-                .catch(err => res.status(400).json("Error: " + err))
+    const password = req.body.password;
+    const newPassword = req.body.newPassword;
+  
+    User.findOne({ username: username, email: email })
+      .then((data) => {
+        if (data) {
+          const hashedPassword = data.password;
+          if (bcrypt.compareSync(password, hashedPassword)) {
+            const salt = bcrypt.genSaltSync(10);
+            const hash = bcrypt.hashSync(newPassword, salt);
+            User.findOneAndUpdate({ username: username, email: email }, { password: hash }, { new: true })
+              .then(() => {
+                res.send("Password updated successfully");
+              })
+              .catch((error) => {
+                res.send("Error updating password: " + error);
+              });
+          } else {
+            res.send("Incorrect password");
+          }
+        } else {
+          res.send("User not found");
         }
-    }).catch(err => res.status(400).json("Error: " + err))
-    
-})
+      })
+      .catch((error) => {
+        res.send("Error: " + error);
+      });
+  });
 
 module.exports = router;

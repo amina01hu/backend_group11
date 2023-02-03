@@ -64,9 +64,8 @@ router.route("/login").post(async (req, res) => {
   });
 
   router.route("/resetPassword").post(async (req, res) => {
-    const username = req.body.username;
     const email = req.body.email;
-    const password = req.body.password;
+    const password = req.body.oldPassword;
     const newPassword = req.body.newPassword;
   
     User.findOne({ username: username, email: email })

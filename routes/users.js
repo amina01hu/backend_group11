@@ -99,4 +99,30 @@ router.route("/login").post(async (req, res) => {
       });
   });
 
+  router.route("/resetPasswordWith").post(async (req, res) => {
+    const email = req.body.email;
+    const newPassword = req.body.newPassword;
+  
+    User.findOne({email: email })
+      .then((data) => {
+        if (data) {
+          const hashedPassword = data.password;
+            const salt = bcrypt.genSaltSync(10);
+            const hash = bcrypt.hashSync(newPassword, salt);
+            User.findOneAndUpdate({email: email }, { password: hash }, { new: true })
+              .then(() => {
+                res.json("Password updated successfully");
+              })
+              .catch((error) => {
+                res.json("Error updating password: " + error);
+              });
+        } else {
+          res.json("User not found");
+        }
+      })
+      .catch((error) => {
+        res.json("Error: " + error);
+      });
+  });
+
 module.exports = router;

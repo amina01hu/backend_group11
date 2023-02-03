@@ -68,14 +68,14 @@ router.route("/login").post(async (req, res) => {
     const password = req.body.oldPassword;
     const newPassword = req.body.newPassword;
   
-    User.findOne({ username: username, email: email })
+    User.findOne({email: email })
       .then((data) => {
         if (data) {
           const hashedPassword = data.password;
           if (bcrypt.compareSync(password, hashedPassword)) {
             const salt = bcrypt.genSaltSync(10);
             const hash = bcrypt.hashSync(newPassword, salt);
-            User.findOneAndUpdate({ username: username, email: email }, { password: hash }, { new: true })
+            User.findOneAndUpdate({email: email }, { password: hash }, { new: true })
               .then(() => {
                 res.send("Password updated successfully");
               })

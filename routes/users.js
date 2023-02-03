@@ -22,7 +22,7 @@ router.route('/add').post(async (req, res) => {
     password = await hashPassword(password);
     const newUser = new User({'username':username, 'email': email, 'password' : password});
     newUser.save()
-    .then(() => res.send('User added!'))
+    .then(() => res.json('User added!'))
     .catch(err => res.status(400).json('Error: ' + err));
 });
 

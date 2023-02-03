@@ -29,6 +29,7 @@ router.route('/getUser').post(async (req, res) => {
     const email = req.body.email;
     const username = req.body.username;
     var password = req.body.password;
+    console.log(password)
     var matchPass = await hashPassword(password);
     User.findOne({'email' : email, 'username' : username })
     .then((data) => {

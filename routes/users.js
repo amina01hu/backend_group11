@@ -48,10 +48,11 @@ router.route('/login').post(async (req, res) => {
     var password = req.body.password;
     User.findOne({'email' : email })
     .then((data) => {
-        if(bcrypt.compareSync(bcrypt.hashSync(password, 10), data.password)){
-            res.send("Account found!")
-        }else{
-            res.send("Account not found")
+        const hashedPassword = bcrypt.hashSync(password, 10);
+        if (bcrypt.compareSync(hashedPassword, data.password)) {
+        res.send("Account found!");
+        } else {
+        res.send("Account not found");
         }
     }).catch(err => res.json("Error: " + err))
     

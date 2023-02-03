@@ -15,6 +15,7 @@ router.route("/").get((req, res) => {
 });
 
 router.route('/add').post(async (req, res) => {
+    console.log(req.body);
     const email = req.body.email;
     const username = req.body.username;
     var password = req.body.password;

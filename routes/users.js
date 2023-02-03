@@ -48,7 +48,7 @@ router.route('/login').post(async (req, res) => {
     var password = req.body.password;
     User.findOne({'email' : email })
     .then((data) => {
-        if(bcrypt.compareSync(bcrypt.hashSync(req.body.password, 10), data.password)){
+        if(bcrypt.compareSync(bcrypt.hashSync(password, 10), data.password)){
             res.send("Account found!")
         }else{
             res.send("Account not found")

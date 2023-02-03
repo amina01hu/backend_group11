@@ -53,7 +53,7 @@ router.route('/login').post(async (req, res) => {
         }else{
             res.send("Account not found")
         }
-    }).catch(err => res.json("Account not found"))
+    }).catch(err => res.json("Account error"))
     
 })
 

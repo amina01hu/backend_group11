@@ -99,7 +99,7 @@ router.route("/login").post(async (req, res) => {
       });
   });
 
-  router.route("/resetPasswordWith").post(async (req, res) => {
+  router.route("/resetPasswordWithout").post(async (req, res) => {
     const email = req.body.email;
     const newPassword = req.body.newPassword;
   

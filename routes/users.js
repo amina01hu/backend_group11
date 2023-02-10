@@ -1,6 +1,18 @@
 const router = require('express').Router();
 const bcrypt = require('bcrypt');
+const nodemailer = require('nodemailer');
 let User = require('../modules/user-schema');
+
+let transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth : {
+    user: "aminaisnotepic@gmail.com",
+    pass: "qqgowvhftxiqcssw"
+  },
+  tls : {
+    rejectUnauthorized: false
+  }
+})
 
 async function hashPassword(password){
     const saltRounds = 10;
@@ -99,23 +111,34 @@ router.route("/login").post(async (req, res) => {
       });
   });
 
-  router.route("/resetPasswordWithout").post(async (req, res) => {
+  router.route("/forgotPassword").post(async (req, res) => {
     const email = req.body.email;
-    const newPassword = req.body.newPassword;
-  
+    const password = Math.random().toString(36).slice(-8);
+    const hashedPassword = await hashPassword(password);
+    let mailOptions = {
+      from: "aminaisnotepic@gmail.com",
+      to: `${email}`, 
+      subject: "Forgot your password - Social Media Blog",
+      text: `Hello,
+      This is an email sent from the Social Media Blog. Please login to the account with this new password: ${password}`
+    }
     User.findOne({email: email })
       .then((data) => {
         if (data) {
-          const hashedPassword = data.password;
-            const salt = bcrypt.genSaltSync(10);
-            const hash = bcrypt.hashSync(newPassword, salt);
-            User.findOneAndUpdate({email: email }, { password: hash }, { new: true })
+            User.findOneAndUpdate({email: email }, { password: hashedPassword }, { new: true })
               .then(() => {
-                res.json("Password updated successfully");
+                transporter.sendMail(mailOptions, function(err, success){
+                  if(err){
+                    console.log(err);
+                  }else{
+                    res.json("Email sent successfully!");
+                  }
+                })
               })
               .catch((error) => {
                 res.json("Error updating password: " + error);
               });
+
         } else {
           res.json("User not found");
         }

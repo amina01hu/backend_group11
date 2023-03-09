@@ -24,7 +24,7 @@ router.route('/add').post(async (req, res) => {
     var comments = req.body.comments;
 
     const newPost = new Post({'title': title, 'username':username, 'data': data, 'img' : img, 'text' : text, 'comments': comments});
-    newUser.save()
+    newPost.save()
     .then(() => res.json('User added!'))
     .catch(err => res.status(400).json('Error: ' + err));
 });

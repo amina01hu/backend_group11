@@ -36,7 +36,7 @@ router.route('/:id').delete((req,res) => {
     .catch(err => res.status(400).json('Error: '+err));
 });
 //update post by id
-router.route('/update/:id').post((req,res) => {
+router.route('/update/:id').update((req,res) => {
     Post.findById(req.params.id)
     .then(posts => {
         posts.title = req.body.title;

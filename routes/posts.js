@@ -25,7 +25,7 @@ router.route('/add').post(async (req, res) => {
 
     const newPost = new Post({'title': title, 'username':username, 'data': data, 'img' : img, 'text' : text, 'comments': comments});
     newPost.save()
-    .then(() => res.json(newPost._id))
+    .then(() => res.json(newPost))
     .catch(err => res.status(400).json('Error: ' + err));
 });
 

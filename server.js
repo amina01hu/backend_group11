@@ -20,8 +20,10 @@ const db = mongoose.connection;
 db.on("error", console.error.bind(console, "MongoDB connection error:"));
 
 const usersRouter = require('./routes/users');
+const postsRouter = require('./routes/posts');
 
 app.use('/users', usersRouter);
+app.use('/post', postsRouter);
 
 app.get('/', (req, res) => {
     res.send("Hello Everyone!");

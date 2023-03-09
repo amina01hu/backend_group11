@@ -23,7 +23,7 @@ const usersRouter = require('./routes/users');
 const postsRouter = require('./routes/posts');
 
 app.use('/users', usersRouter);
-app.use('/post', postsRouter);
+app.use('/posts', postsRouter);
 
 app.get('/', (req, res) => {
     res.send("Hello Everyone!");

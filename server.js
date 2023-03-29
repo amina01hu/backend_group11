@@ -5,8 +5,6 @@ const mongoose = require("mongoose");
 const app = express();
 const cors = require('cors');
 const HTTP_PORT = process.env.PORT || 8080;
-let User = require('./modules/user-schema');
-let Post = require('./modules/post-schema');
 
 app.use(cors());
 app.use(express.json());
@@ -21,9 +19,13 @@ db.on("error", console.error.bind(console, "MongoDB connection error:"));
 
 const usersRouter = require('./routes/users');
 const postsRouter = require('./routes/posts');
+const conversationsRouter = require('./routes/conversations');
+const messagesRouter = require('./routes/messages');
 
 app.use('/users', usersRouter);
 app.use('/posts', postsRouter);
+app.use('/conversations', conversationsRouter);
+app.use('/messages', messagesRouter);
 
 app.get('/', (req, res) => {
     res.send("Hello Everyone!");

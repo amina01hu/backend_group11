@@ -23,7 +23,7 @@ async function hashPassword(password){
 router.route("/").get((req, res) => {
     User.find()
     .then(users => res.json(users))
-    .catch(err => res.status(400).json('Error: ' + err));
+    .catch(err => res.status(400).json('Error could not get all suers: ' + err));
 });
 
 router.route('/add').post(async (req, res) => {
@@ -35,7 +35,7 @@ router.route('/add').post(async (req, res) => {
     const newUser = new User({'username':username, 'email': email, 'password' : password});
     newUser.save()
     .then(() => res.json('User added!'))
-    .catch(err => res.status(400).json('Error: ' + err));
+    .catch(err => res.status(400).json('Error could not add new user: ' + err));
 });
 
 router.route("/getUser").post(async (req, res) => {

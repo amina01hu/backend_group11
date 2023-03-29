@@ -5,14 +5,14 @@ let Post = require('../modules/post-schema');
 router.route('/').get((req,res) => {
     Post.find()
     .then(posts => res.json(posts))
-    .catch(err => res.status(400).json('Error: ' +err));
+    .catch(err => res.status(400).json('Error could not get all posts: ' +err));
 });
 
 //get post by id
 router.route('/:id').get((req,res) => {
     Post.findById(req.params.id)
     .then(posts => res.json(posts))
-    .catch(err => res.status(400).json('Error: '+err));
+    .catch(err => res.status(400).json('Error could not get posts by id: '+err));
 });
 //create post 
 router.route('/add').post(async (req, res) => {
@@ -25,15 +25,15 @@ router.route('/add').post(async (req, res) => {
 
     const newPost = new Post({'title': title, 'username':username, 'data': data, 'img' : img, 'text' : text, 'comments': comments});
     newPost.save()
-    .then(() => res.json("Post Added!"))
-    .catch(err => res.status(400).json('Error: ' + err));
+    .then(() => res.json(newPost))
+    .catch(err => res.status(400).json('Error could not add a new post: ' + err));
 });
 
 //delete post by id
 router.route('/:id').delete((req,res) => {
     Post.findByIdAndDelete(req.params.id)
     .then(posts => res.json('Post deleted'))
-    .catch(err => res.status(400).json('Error: '+err));
+    .catch(err => res.status(400).json('Error post could not be deleted: '+err));
 });
 //update post by id
 router.route('/update/:id').post((req,res) => {
@@ -47,9 +47,9 @@ router.route('/update/:id').post((req,res) => {
         posts.comments = req.body.comments;
     posts.save()
     .then(() => res.json('Posts updated !'))
-    .catch(err => res.status(400).json('Error: '+err));
+    .catch(err => res.status(400).json('Error post could not be updated '+err));
     })
-    .catch(err => res.status(400).json('Error: '+err));
+    .catch(err => res.status(400).json('Error post could not be found: '+err));
 });
 
 

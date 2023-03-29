@@ -32,7 +32,14 @@ router.route('/add').post(async (req, res) => {
     const username = req.body.username;
     var password = req.body.password;
     password = await hashPassword(password);
-    const newUser = new User({'username':username, 'email': email, 'password' : password});
+    var security_questions = req.body.security_questions;
+    var fName = req.body.fName;
+    var lName = req.body.lName;
+    var img = req.body.img;
+    var desc = req.body.desc;
+    var friends = req.body.friends;
+    const newUser = new User({'username':username, 'email': email, 'password' : password, 'security_questions': security_questions,
+  'fName': fName, 'lName':lName, 'img':img, 'desc':desc, 'friends':friends});
     newUser.save()
     .then(() => res.json('User added!'))
     .catch(err => res.status(400).json('Error could not add new user: ' + err));
@@ -60,6 +67,30 @@ router.route("/getUser").post(async (req, res) => {
         res.json("Error: " + error);
       });
   });
+
+
+router.route("/getFriends").post(async (req, res) => {
+  const username = req.body.username;
+  const email = req.body.email;
+  const password = req.body.password;
+
+  User.findOne({ username: username, email: email })
+    .then((data) => {
+      if (data) {
+        const hashedPassword = data.password;
+        if (bcrypt.compareSync(password, hashedPassword)) {
+          res.json(data.friends);
+        } else {
+          res.json("Incorrect password");
+        }
+      } else {
+        res.json("User not found");
+      }
+    })
+    .catch((error) => {
+      res.json("Error: " + error);
+    });
+});
 
 
 router.route("/login").post(async (req, res) => {

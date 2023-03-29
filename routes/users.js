@@ -45,6 +45,7 @@ router.route('/add').post(async (req, res) => {
     .catch(err => res.status(400).json('Error could not add new user: ' + err));
 });
 
+
 router.route("/getUser").post(async (req, res) => {
     const username = req.body.username;
     const email = req.body.email;
@@ -110,6 +111,58 @@ router.route("/login").post(async (req, res) => {
       })
       .catch((err) => res.json("Error: " + err));
   });
+
+  router.route('addFriend').post(async (req, res) =>{
+    const usersEmail = req.body.usersEmail;
+    const friendsEmail = req.body.friendsEmail;
+    User.findOne({email: friendsEmail})
+    .then((data) => {
+      if (data) {
+        var friendObj = {'friendUsername': data.username, 'dateAdded': new Date()};
+          User.findOneAndUpdate(
+            { email: usersEmail }, 
+            { $push: { friends: friendObj  }})
+            .then(() => {
+              res.json("Friend added!")
+            })
+            .catch((error) => {
+              res.json("Error adding friend: " + error);
+            });
+  
+      }else {
+        res.json("Friend not found");
+      }
+    })
+    .catch((error) => {
+      res.json("Error: " + error);
+    });
+  })
+
+  router.route('removeFriend').post(async (req, res) =>{
+    const usersEmail = req.body.usersEmail;
+    const friendsEmail = req.body.friendsEmail;
+    User.findOne({email: friendsEmail})
+    .then((data) => {
+      if (data) {
+        var friendObj = {'friendUsername': data.username, 'dateAdded': new Date()};
+          User.findOneAndUpdate(
+            { email: usersEmail }, 
+            { $pull: { friends: friendObj  }})
+            .then(() => {
+              res.json("Friend removed!")
+            })
+            .catch((error) => {
+              res.json("Error adding friend: " + error);
+            });
+  
+      }else {
+        res.json("Friend not found");
+      }
+    })
+    .catch((error) => {
+      res.json("Error: " + error);
+    });
+  })
 
   router.route("/resetPassword").post(async (req, res) => {
     const email = req.body.email;

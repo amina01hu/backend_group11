@@ -35,6 +35,7 @@ router.route('/:id').delete((req,res) => {
     .then(posts => res.json('Post deleted'))
     .catch(err => res.status(400).json('Error post could not be deleted: '+err));
 });
+
 //update post by id
 router.route('/update/:id').post((req,res) => {
     Post.findById(req.params.id)
@@ -51,6 +52,56 @@ router.route('/update/:id').post((req,res) => {
     })
     .catch(err => res.status(400).json('Error post could not be found: '+err));
 });
+
+//add comment to post
+router.route('addComment/:id').post((req,res) =>{
+    var commenterUsername = req.body.commenterUsername;
+    var commenterText = req.body.commenterText;
+    var postId = req.params.id;
+    var newComment = {'username' :commenterUsername, 'text': commenterText, 'date': new Date};
+    Post.findByIdAndUpdate(postId, 
+        { $push: { comments: newComment }})
+        .then((updatedPost) => {
+          res.json("Comment added! : " + updatedPost)
+        })
+        .catch((error) => {
+          res.json("Error adding comment: " + error);
+        });
+})
+
+//remove comment from post
+router.route('removeComment/:id').post((req,res) =>{
+    var commenterUsername = req.body.commenterUsername;
+    var commenterText = req.body.commenterText;
+    var postId = req.params.id;
+    var newComment = {'username' :commenterUsername, 'text': commenterText, 'date': new Date};
+    Post.findByIdAndUpdate(postId, 
+        { $pull: { comments: newComment }})
+        .then((updatedPost) => {
+          res.json("Comment removed! : " + updatedPost)
+        })
+        .catch((error) => {
+          res.json("Error removing comment: " + error);
+        });
+})
+
+//remove comment from post
+router.route('editComment/:id').post((req,res) =>{
+    const commenterUsername = req.body.commenterUsername;
+    const commenterText = req.body.commenterText;
+    const postId = req.params.id;
+
+    Post.findOneAndUpdate(
+        { id: postId, "comments.username": commenterUsername },
+        { $set: {"comments.$.text": commenterText } },
+        { new: true })
+        .then((updatedPost) => {
+        res.json("Comment updated! : " + updatedPost);
+        })
+        .catch((error) => {
+        res.json("Error updating comment: " + error);
+        });
+})
 
 
 module.exports = router;

@@ -120,6 +120,7 @@ router.route("/login").post(async (req, res) => {
       if (data) {
         var friendObj = {'friendUsername': data.username, 'dateAdded': new Date()};
           User.findOneAndUpdate({email:usersEmail},{$push:{friends:friendObj}})
+            .lean()
             .then(() => {
               res.json("Friend added!")
             })

@@ -71,26 +71,21 @@ router.route("/getUser").post(async (req, res) => {
 
 
 router.route("/getFriends").post(async (req, res) => {
-  const username = req.body.username;
-  const email = req.body.email;
-  const password = req.body.password;
+  const { email } = req.params;
 
-  User.findOne({ username: username, email: email })
-    .then((data) => {
-      if (data) {
-        const hashedPassword = data.password;
-        if (bcrypt.compareSync(password, hashedPassword)) {
-            res.json("Here are your friends: " + data.friends);
-        } else {
-          res.json("Incorrect password");
-        }
-      } else {
-        res.json("User not found");
-      }
-    })
-    .catch((error) => {
-      res.json("Error: " + error);
-    });
+  try {
+    const user = await User.findOne({ email: email });
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const friends = user.friends;
+
+    res.json(friends);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server error' });
+  }
 });
 
 
@@ -112,54 +107,51 @@ router.route("/login").post(async (req, res) => {
       .catch((err) => res.json("Error: " + err));
   });
 
-  router.post('/addFriend', async (req, res) => {
-    const { usersEmail, friendsEmail } = req.body;
+router.post('/addFriend', async (req, res) => {
+  const { userEmail, friendEmail } = req.body;
   
-    try {
-      const friendUser = await User.findOne({ email: friendsEmail });
-      if (!friendUser) {
-        return res.status(404).json({ error: 'Friend not found' });
-      }
+  try {
+    const friendUser = await User.findOne({ email: friendEmail });
+    if (!friendUser) {
+      return res.status(404).json({ error: 'Friend not found' });
+    }
   
-      const friendObj = { friendUsername: friendUser.username, dateAdded: new Date() };
-      const updatedUser = await User.findOneAndUpdate(
-        { email: usersEmail },
-        { $push: { friends: friendObj } },
-        { new: true }
-      );
+    const friendObj = { friendUsername: friendUser.username, dateAdded: new Date() };
+    const updatedUser = await User.findOneAndUpdate(
+      { email: userEmail },
+      { $push: { friends: friendObj } },
+      { new: true }
+    );
   
-      res.json(updatedUser.friends);
+    res.json(updatedUser.friends);
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: 'Server error' });
     }
-  });
+});
   
 
   router.route("/removeFriend").post(async (req, res) =>{
-    const usersEmail = req.body.usersEmail;
-    const friendsEmail = req.body.friendsEmail;
-    User.findOne({email: friendsEmail})
-    .then((data) => {
-      if (data) {
-        var friendObj = {'friendUsername': data.username, 'dateAdded': new Date()};
-          User.findOneAndUpdate(
-            { email: usersEmail }, 
-            { $pull: { friends: friendObj  }})
-            .then(() => {
-              res.json("Friend removed!")
-            })
-            .catch((error) => {
-              res.json("Error adding friend: " + error);
-            });
+    const { userEmail, friendEmail } = req.body;
   
-      }else {
-        res.json("Friend not found");
+    try {
+      const friendUser = await User.findOne({ email: friendEmail });
+      if (!friendUser) {
+        return res.status(404).json({ error: 'Friend not found' });
       }
-    })
-    .catch((error) => {
-      res.json("Error: " + error);
-    });
+    
+      const friendObj = { friendUsername: friendUser.username, dateAdded: new Date() };
+      const updatedUser = await User.findOneAndUpdate(
+        { email: userEmail },
+        { $pull: { friends: friendObj } },
+        { new: true }
+      );
+    
+      res.json(updatedUser.friends);
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Server error' });
+      }
   })
 
   router.route("/resetPassword").post(async (req, res) => {

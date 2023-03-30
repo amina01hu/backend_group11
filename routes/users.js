@@ -112,30 +112,29 @@ router.route("/login").post(async (req, res) => {
       .catch((err) => res.json("Error: " + err));
   });
 
-  router.route("/addFriend").post(async (req, res) => {
-    const usersEmail = req.body.usersEmail;
-    const friendsEmail = req.body.friendsEmail;
-    User.findOne({email: friendsEmail})
-    .then((data) => {
-      if (data) {
-        var friendObj = {'friendUsername': data.username, 'dateAdded': new Date()};
-          User.findOneAndUpdate({email:usersEmail},{$push:{friends:friendObj}})
-            .lean()
-            .then(() => {
-              res.json("Friend added!")
-            })
-            .catch((error) => {
-              res.json("Error adding friend: " + error);
-            });
+  router.post('/addFriend', async (req, res) => {
+    const { usersEmail, friendsEmail } = req.body;
   
-      }else {
-        res.json("Friend not found");
+    try {
+      const friendUser = await User.findOne({ email: friendsEmail });
+      if (!friendUser) {
+        return res.status(404).json({ error: 'Friend not found' });
       }
-    })
-    .catch((error) => {
-      res.json("Error: " + error);
-    });
+  
+      const friendObj = { friendUsername: friendUser.username, dateAdded: new Date() };
+      const updatedUser = await User.findOneAndUpdate(
+        { email: usersEmail },
+        { $push: { friends: friendObj } },
+        { new: true }
+      );
+  
+      res.json(updatedUser.friends);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Server error' });
+    }
   });
+  
 
   router.route("/removeFriend").post(async (req, res) =>{
     const usersEmail = req.body.usersEmail;

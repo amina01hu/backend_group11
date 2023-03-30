@@ -80,7 +80,11 @@ router.route("/getFriends").post(async (req, res) => {
       if (data) {
         const hashedPassword = data.password;
         if (bcrypt.compareSync(password, hashedPassword)) {
-          res.json("Here are your friends: " + data.friends);
+          if(data.friends.size() == 0){
+            res.json("You have 0 friends! Add some friends!");
+          }else{
+            res.json("Here are your friends: " + data.friends);
+          }
         } else {
           res.json("Incorrect password");
         }

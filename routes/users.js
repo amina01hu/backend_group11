@@ -112,7 +112,7 @@ router.route("/login").post(async (req, res) => {
       .catch((err) => res.json("Error: " + err));
   });
 
-  router.route('addFriend').post(async (req, res) => {
+  router.route("/addFriend").post(async (req, res) => {
     const usersEmail = req.body.usersEmail;
     const friendsEmail = req.body.friendsEmail;
     User.findOne({email: friendsEmail})
@@ -138,7 +138,7 @@ router.route("/login").post(async (req, res) => {
     });
   });
 
-  router.route('removeFriend').post(async (req, res) =>{
+  router.route("/removeFriend").post(async (req, res) =>{
     const usersEmail = req.body.usersEmail;
     const friendsEmail = req.body.friendsEmail;
     User.findOne({email: friendsEmail})

@@ -54,7 +54,7 @@ router.route('/update/:id').post((req,res) => {
 });
 
 //add comment to post
-router.route('addComment/:id').post((req,res) =>{
+router.route('/addComment/:id').post((req,res) =>{
     var commenterUsername = req.body.commenterUsername;
     var commenterText = req.body.commenterText;
     var postId = req.params.id;
@@ -70,7 +70,7 @@ router.route('addComment/:id').post((req,res) =>{
 })
 
 //remove comment from post
-router.route('removeComment/:id').post((req,res) =>{
+router.route('/removeComment/:id').post((req,res) =>{
     var commenterUsername = req.body.commenterUsername;
     var commenterText = req.body.commenterText;
     var postId = req.params.id;
@@ -86,7 +86,7 @@ router.route('removeComment/:id').post((req,res) =>{
 })
 
 //remove comment from post
-router.route('editComment/:id').post((req,res) =>{
+router.route('/editComment/:id').post((req,res) =>{
     const commenterUsername = req.body.commenterUsername;
     const commenterText = req.body.commenterText;
     const postId = req.params.id;

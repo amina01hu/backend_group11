@@ -62,7 +62,7 @@ router.route('/addComment/:id').post((req,res) =>{
     Post.findByIdAndUpdate(postId, 
         { $push: { comments: newComment }})
         .then((updatedPost) => {
-          res.json("Comment added! : " + updatedPost)
+          res.json("Comment added! : " + updatedPost.comments)
         })
         .catch((error) => {
           res.json("Error adding comment: " + error);
@@ -78,7 +78,7 @@ router.route('/removeComment/:id').post((req,res) =>{
     Post.findByIdAndUpdate(postId, 
         { $pull: { comments: newComment }})
         .then((updatedPost) => {
-          res.json("Comment removed! : " + updatedPost)
+          res.json("Comment removed! : " + updatedPost.comments)
         })
         .catch((error) => {
           res.json("Error removing comment: " + error);
@@ -96,7 +96,7 @@ router.route('/editComment/:id').post((req,res) =>{
         { $set: {"comments.$.text": commenterText } },
         { new: true })
         .then((updatedPost) => {
-        res.json("Comment updated! : " + updatedPost);
+        res.json("Comment updated! : " + updatedPost.comments);
         })
         .catch((error) => {
         res.json("Error updating comment: " + error);

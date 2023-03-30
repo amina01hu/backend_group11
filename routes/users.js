@@ -71,10 +71,10 @@ router.route("/getUser").post(async (req, res) => {
 
 
 router.route("/getFriends").post(async (req, res) => {
-  const { userEmail } = req.params;
+  const { email } = req.body;
 
   try {
-    const user = await User.findOne({ email: userEmail });
+    const user = await User.findOne({ email: email });
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }

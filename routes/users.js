@@ -140,10 +140,10 @@ router.post('/addFriend', async (req, res) => {
         return res.status(404).json({ error: 'Friend not found' });
       }
     
-      const friendObj = { friendUsername: friendUser.username, dateAdded: new Date() };
+      const friendUsername = friendUser.username;
       const updatedUser = await User.findOneAndUpdate(
         { email: userEmail },
-        { $pull: { friends: friendObj } },
+        { $pull: { friends: { friendUsername } } },
         { new: true }
       );
     

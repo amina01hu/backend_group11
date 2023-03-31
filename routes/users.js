@@ -108,17 +108,17 @@ router.route("/login").post(async (req, res) => {
   });
 
 router.post('/addFriend', async (req, res) => {
-  const { userEmail, friendEmail } = req.body;
+  const { username, friendUsername } = req.body;
   
   try {
-    const friendUser = await User.findOne({ email: friendEmail });
+    const friendUser = await User.findOne({ username: friendUsername });
     if (!friendUser) {
       return res.status(404).json({ error: 'Friend not found' });
     }
   
     const friendObj = { friendUsername: friendUser.username, dateAdded: new Date() };
     const updatedUser = await User.findOneAndUpdate(
-      { email: userEmail },
+      { username: username },
       { $push: { friends: friendObj } },
       { new: true }
     );
@@ -132,17 +132,17 @@ router.post('/addFriend', async (req, res) => {
   
 
   router.route("/removeFriend").post(async (req, res) =>{
-    const { userEmail, friendEmail } = req.body;
+    const { username, friendUsername } = req.body;
   
     try {
-      const friendUser = await User.findOne({ email: friendEmail });
+      const friendUser = await User.findOne({ username: friendUsername });
       if (!friendUser) {
         return res.status(404).json({ error: 'Friend not found' });
       }
     
       const friendUsername = friendUser.username;
       const updatedUser = await User.findOneAndUpdate(
-        { email: userEmail },
+        { username: username },
         { $pull: { friends: { friendUsername } } },
         { new: true }
       );
@@ -152,7 +152,7 @@ router.post('/addFriend', async (req, res) => {
         console.error(error);
         res.status(500).json({ error: 'Server error' });
       }
-  })
+  });
 
   router.route("/resetPassword").post(async (req, res) => {
     const email = req.body.email;

@@ -133,14 +133,11 @@ router.post('/addFriend', async (req, res) => {
 
   router.route("/removeFriend").post(async (req, res) =>{
     const { username, friendUsername } = req.body;
-  
     try {
       const friendUser = await User.findOne({ username: friendUsername });
       if (!friendUser) {
         return res.status(404).json({ error: 'Friend not found' });
       }
-    
-      const friendUsername = friendUser.username;
       const updatedUser = await User.findOneAndUpdate(
         { username: username },
         { $pull: { friends: { friendUsername } } },
@@ -148,6 +145,7 @@ router.post('/addFriend', async (req, res) => {
       );
     
       res.json(updatedUser.friends);
+      
       } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Server error' });

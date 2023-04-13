@@ -16,7 +16,7 @@ router.route('/:id').get((req,res) => {
 });
 
 //get all posts made by a user
-router.route('/:username').get((req,res) => {
+router.route('/:username').get(async (req,res) => {
     try {
         const posts = await Post.find({ username: req.params.username });
         res.json(posts);

@@ -16,14 +16,10 @@ router.route('/:id').get((req,res) => {
 });
 
 //get all posts made by a user
-router.route('/byUser').post(async (req,res) => {
-    try {
-        const posts = await Post.find({ username: req.body.username });
-        res.json(posts);
-      } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Server error' });
-      }
+router.route('/byUser').post( (req,res) => {
+    Post.find({username: req.body.username})
+    .then(posts => res.json(posts))
+    .catch(err => res.status(400).json('User could not be found: '+err))
 });
 
 //create post 

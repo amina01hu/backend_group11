@@ -16,9 +16,9 @@ router.route('/:id').get((req,res) => {
 });
 
 //get all posts made by a user
-router.route('/:username').get(async (req,res) => {
+router.route('/byUser').post(async (req,res) => {
     try {
-        const posts = await Post.find({ username: req.params.username });
+        const posts = await Post.find({ username: req.body.username });
         res.json(posts);
       } catch (error) {
         console.error(error);

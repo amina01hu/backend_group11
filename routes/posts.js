@@ -16,12 +16,17 @@ router.route('/:id').get((req,res) => {
 });
 
 //get all posts made by a user
-router.route('/byUser').post( (req,res) => {
-    var bruh = [];
-    Post.find({username: req.body.username})
-    .then(posts => res.json( posts === bruh))
-    .catch(err => res.status(400).json('User could not be found: '+err))
-});
+router.route('/byUser').post((req, res) => {
+    Post.find({ username: req.body.username })
+      .then(posts => {
+        if (posts.length === 0) {
+          return res.json({ message: 'No posts found for user' });
+        }
+        res.json(posts);
+      })
+      .catch(err => res.status(400).json('User could not be found: ' + err));
+  });
+  
 
 //create post 
 router.route('/add').post(async (req, res) => {

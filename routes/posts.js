@@ -18,7 +18,7 @@ router.route('/:id').get((req,res) => {
 //get all posts made by a user
 router.route('/byUser').post( (req,res) => {
     Post.find({username: req.body.username})
-    .then(posts => res.json( posts.length + "" + posts))
+    .then(posts => res.json( posts == null))
     .catch(err => res.status(400).json('User could not be found: '+err))
 });
 

@@ -48,10 +48,9 @@ router.route('/add').post(async (req, res) => {
 
 router.route("/getUser").post(async (req, res) => {
     const username = req.body.username;
-    const email = req.body.email;
     const password = req.body.password;
   
-    User.findOne({ username: username, email: email })
+    User.findOne({ username: username})
       .then((data) => {
         if (data) {
           const hashedPassword = data.password;
@@ -67,6 +66,25 @@ router.route("/getUser").post(async (req, res) => {
       .catch((error) => {
         res.json("Error: " + error);
       });
+  });
+
+  
+  router.route("/updateUser/:username").put(async (req, res) => {
+    const { fName, lName, email, img } = req.body;
+    const { username } = req.params;
+  
+    try {
+      const updatedUser = await User.findOneAndUpdate(
+        { username },
+        { $set: { fName: fName, lName: lName, email: email, img: img } },
+        { new: true }
+      );
+  
+      res.json(updatedUser);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Server error" });
+    }
   });
 
 

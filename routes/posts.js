@@ -14,6 +14,18 @@ router.route('/:id').get((req,res) => {
     .then(posts => res.json(posts))
     .catch(err => res.status(400).json('Error could not get posts by id: '+err));
 });
+
+//get all posts made by a user
+router.route('/:username').get((req,res) => {
+    try {
+        const posts = await Post.find({ username: req.params.username });
+        res.json(posts);
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Server error' });
+      }
+});
+
 //create post 
 router.route('/add').post(async (req, res) => {
     const title = req.body.title;

@@ -29,9 +29,9 @@ const conversationsRouter = require('./routes/conversations');
 const messagesRouter = require('./routes/messages');
 
 app.use('/users', limiter, usersRouter);
-app.use('/posts', postsRouter);
-app.use('/conversations', conversationsRouter);
-app.use('/messages', messagesRouter);
+app.use('/posts', limiter, postsRouter);
+app.use('/conversations', limiter, conversationsRouter);
+app.use('/messages', limiter, messagesRouter);
 
 app.get('/', (req, res) => {
     res.send("Hello Everyone!");

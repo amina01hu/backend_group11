@@ -1,29 +1,30 @@
 const router = require('express').Router();
 let Message = require('../modules/message-schema');
 
-//get all messages
-router.route('/').get((req,res) => {
-    Message.find()
-    .then(messages => res.json(messages))
-    .catch(err => res.status(400).json('Error message could not be retrieved: ' +err));
+
+//get messages by conversation id
+router.route('/:conversationId').get(async (req,res) => {
+    try{
+        const messages = await  Message.find({
+            conversationId: req.params.conversationId
+        })
+        .then(() => res.status(200).json(messages))
+        .catch(err => res.status(400).json('Error could not get messages by conversatioin id: '+err));
+    }catch(error){
+        res.status(500).json(error);
+    }
 });
 
-//get messages by id
-router.route('/:id').get((req,res) => {
-    Message.findById(req.params.id)
-    .then(messages => res.json(messages))
-    .catch(err => res.status(400).json('Error could not get messages by id: '+err));
-});
-//create coversation 
-router.route('/add').post(async (req, res) => {
-    var sender = req.body.sender;
-    var messageBody = req.body.messageBody;
-    var timeSent = req.body.timeSent;
-    var conversationId = req.body.conversationId;
-    const newMessage = new Message({'sender': sender, 'messageBody': messageBody, 'timeSent': timeSent, 'conversationId':conversationId});
-    newMessage.save()
-    .then(() => res.json(newMessage))
-    .catch(err => res.status(400).json('Error could not create a new message: ' + err));
+// add new message
+router.route('/').post(async (req, res) => {
+    try{
+        const newMessage = new Message(req.body);
+        const savedMessage = await newMessage.save()
+        .then(() => res.status(200).json(savedMessage))
+        .catch(err => res.status(400).json('Error could not add a new message: ' + err));
+     }catch(error){
+        res.status(500).json(error);
+    }
 }); 
 
 

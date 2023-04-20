@@ -18,7 +18,7 @@ router.route('/').post(async (req, res) => {
 router.route('/:userId').get(async (req,res) => {
     try{
         const userConversation = await Conversation.find({
-            particpants: {$in: [req.params.userId] }
+            participants: {$in: [req.params.userId] }
         });
         res.status(200).json(userConversation);
     }catch(error){

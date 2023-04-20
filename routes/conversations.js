@@ -28,7 +28,7 @@ router.route('/:userId').get(async (req,res) => {
 
 //get conversations using two userids
 
-router.route('find/:firstUserId/:secondUserId').get(async (req, res) => {
+router.route('/find/:firstUserId/:secondUserId').get(async (req, res) => {
     try{
         const conversation = await Conversation.find({
             particpants: {$all: [req.params.userId, req.params.secondUserId] }

@@ -7,9 +7,8 @@ router.route('/:conversationId').get(async (req,res) => {
     try{
         const messages = await  Message.find({
             conversationId: req.params.conversationId
-        })
-        .then(() => res.status(200).json(messages))
-        .catch(err => res.status(400).json('Error could not get messages by conversatioin id: '+err));
+        });
+        res.status(200).json(messages);
     }catch(error){
         res.status(500).json(error);
     }
@@ -19,9 +18,8 @@ router.route('/:conversationId').get(async (req,res) => {
 router.route('/').post(async (req, res) => {
     try{
         const newMessage = new Message(req.body);
-        const savedMessage = await newMessage.save()
-        .then(() => res.status(200).json(savedMessage))
-        .catch(err => res.status(400).json('Error could not add a new message: ' + err));
+        const savedMessage = await newMessage.save();
+        res.status(200).json(savedMessage);
      }catch(error){
         res.status(500).json(error);
     }

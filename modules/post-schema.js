@@ -9,7 +9,7 @@ let postSchema = new Schema({
     img: [{type:String}],
     text: String,
     comments: [
-        {id:Number, username:String, text:String, date: Date}
+        {id:Number, username:String, profileImage:String, text:String, date: Date}
         ] 
 });
 

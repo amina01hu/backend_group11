@@ -5,11 +5,16 @@ let conversationSchema = new Schema(
     {
         participants : {
             type: Array
-        }
-    },
-    {
-        timestamps: true
+        },
+        messages: [
+            {
+                from:String,
+                to:String,
+                message: String,
+                date: Date
+            }
+        ] 
     }
 );
 
-module.exports = mongoose.model('conversation', conversationSchema);
+module.exports = mongoose.model('Conversation', conversationSchema);

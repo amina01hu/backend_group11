@@ -20,12 +20,10 @@ db.on("error", console.error.bind(console, "MongoDB connection error:"));
 const usersRouter = require('./routes/users');
 const postsRouter = require('./routes/posts');
 const conversationsRouter = require('./routes/conversations');
-const messagesRouter = require('./routes/messages');
 
 app.use('/users', usersRouter);
 app.use('/posts', postsRouter);
 app.use('/conversations', conversationsRouter);
-app.use('/messages', messagesRouter);
 
 app.get('/', (req, res) => {
     res.send("Hello Everyone!");
